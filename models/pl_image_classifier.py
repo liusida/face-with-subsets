@@ -9,11 +9,14 @@ class LitImageClassifier(pl.LightningModule):
 
     def __init__(self, output_dim=10): # input_dim = [3, 256, 256]
         super().__init__()
-        self.conv1 = nn.Conv2d(3, 6, 8)
+        self.conv1 = nn.Conv2d(3, 64, 3)
         self.pool = nn.MaxPool2d(2, 2)
-        self.conv2 = nn.Conv2d(6, 16, 8)
-        self.conv3 = nn.Conv2d(16, 32, 8)
-        self.fc1 = nn.Linear(32 * 25 * 25, output_dim)
+        self.conv2 = nn.Conv2d(64, 64, 3)
+        self.conv3 = nn.Conv2d(64, 64, 3)
+        self.conv4 = nn.Conv2d(64, 64, 3)
+        self.conv5 = nn.Conv2d(64, 64, 3)
+        self.conv6 = nn.Conv2d(64, 64, 3)
+        self.fc1 = nn.Linear(32 * 8, output_dim)
         self.save_hyperparameters()
         self.accuracy = torchmetrics.Accuracy()
 
@@ -21,6 +24,9 @@ class LitImageClassifier(pl.LightningModule):
         x = self.pool(F.relu(self.conv1(x)))
         x = self.pool(F.relu(self.conv2(x)))
         x = self.pool(F.relu(self.conv3(x)))
+        x = self.pool(F.relu(self.conv4(x)))
+        x = self.pool(F.relu(self.conv5(x)))
+        x = self.pool(F.relu(self.conv6(x)))
         x = torch.flatten(x, 1) # flatten all dimensions except batch
         x = self.fc1(x)
         x = F.softmax(x, dim=1)
