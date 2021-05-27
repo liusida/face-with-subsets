@@ -1,6 +1,7 @@
 #%%
 from typing import Any, Callable, cast, Dict, List, Optional, Tuple
 import os
+import pickle
 import pandas as pd
 
 import torch
@@ -23,9 +24,14 @@ df_labels = df_labels[df_labels['gender_confidence']>0.9]
 # get targets
 labels_age_group = df_labels['age_group'].unique().tolist()
 targets = {}
+targets_rev = {}
 for i,l in enumerate(labels_age_group):
     targets[l] = i
-targets # {'0-2':0, ...}
+    targets_rev[i] = l
+with open("targets.pkl", "wb") as f:
+    pickle.dump(targets, f) # {'0-2':0, ...}
+with open("targets_rev.pkl", "wb") as f:
+    pickle.dump(targets_rev, f) # {'0-2':0, ...}
 
 #%%
 #%%
@@ -56,7 +62,7 @@ trainset_male, valset_male = torch.utils.data.random_split(set_male, [l-1000, 10
 
 for i, (data, target) in enumerate(trainset_male):
     print(i,data.shape,target)
-    if i>10: break
+    if i>3: break
 #%%
 train_loader = torch.utils.data.DataLoader(
     trainset_male,
@@ -75,6 +81,10 @@ val_loader = torch.utils.data.DataLoader(
 #     break
 # %%
 model = LitImageClassifier()
-trainer = pl.Trainer(gpus=1, logger=logger, max_epochs=20, val_check_interval=5)
+
+# checkpoint_callback = pl.callbacks.ModelCheckpoint(dirpath='checkpoints/')
+
+trainer = pl.Trainer(gpus=1, logger=logger, max_epochs=20, val_check_interval=5, callbacks=[])
 trainer.fit(model, train_dataloader=train_loader, val_dataloaders=val_loader)
 # %%
+trainer.save_checkpoint("pl-model.ckpt")

@@ -4,6 +4,7 @@ data-labels
 data/
 tmp_*
 .vscode
+checkpoints/
 
 
 # Byte-compiled / optimized / DLL files
