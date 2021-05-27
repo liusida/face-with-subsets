@@ -1,3 +1,11 @@
+wandb/
+lightning_logs/
+data-labels
+data/
+tmp_*
+.vscode
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
