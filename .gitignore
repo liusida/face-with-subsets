@@ -5,7 +5,7 @@ data/
 tmp_*
 .vscode
 checkpoints/
-
+private/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
