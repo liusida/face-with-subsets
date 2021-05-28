@@ -6,6 +6,7 @@ tmp_*
 .vscode
 checkpoints/
 private/
+output/*.png
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
